@@ -14,10 +14,11 @@ export const CurrentUserProvider = ({ children }) => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const user = await res.json();
-        setCurrentUser(user);
+        if (res.ok && user) {
+          setCurrentUser(user);
+        }
       } catch (error) {
         console.error("Failed to fetch current user:", error);
-
         setCurrentUser(null);
       } finally {
         setLoading(false);
@@ -26,7 +27,9 @@ export const CurrentUserProvider = ({ children }) => {
     fetchCurrentUser();
   }, []);
   return (
-    <CurrentUserContext.Provider value={{ currentUser, loading }}>
+    <CurrentUserContext.Provider
+      value={{ currentUser, setCurrentUser, loading }}
+    >
       {children}
     </CurrentUserContext.Provider>
   );
