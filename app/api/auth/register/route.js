@@ -1,7 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-
+import jwt from "jsonwebtoken";
+import { cookies } from "next/headers";
 const prisma = new PrismaClient();
 
 export async function POST(request) {
@@ -53,7 +54,9 @@ export async function POST(request) {
         createdAt: true,
       },
     });
+    const token = jwt.sign({ id: user.id, role: user.role }, "appSecret");
 
+    (await cookies()).set("token", token);
     return NextResponse.json(
       {
         message: "Registration successful",

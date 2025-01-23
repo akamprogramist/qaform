@@ -11,12 +11,11 @@ export const CurrentUserProvider = ({ children }) => {
       try {
         const res = await fetch("/api/auth/currentuser");
         if (!res.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(`HTTP error! status: ${res.status}`);
         }
         const user = await res.json();
-        if (res.ok && user) {
-          setCurrentUser(user);
-        }
+
+        setCurrentUser(user);
       } catch (error) {
         console.error("Failed to fetch current user:", error);
         setCurrentUser(null);
