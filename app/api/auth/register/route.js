@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { fullname, email, password } = body;
+    const { fullname, email, password, role } = body;
 
     if (!fullname || !email || !password) {
       return NextResponse.json(
@@ -42,18 +42,21 @@ export async function POST(request) {
         name: fullname.trim(),
         email: email.toLowerCase().trim(),
         password: hash,
+        role: role,
       },
       // Only select safe fields to return
       select: {
         id: true,
         name: true,
         email: true,
+        role: true,
         createdAt: true,
       },
     });
 
     return NextResponse.json(
       {
+        message: "Registration successful",
         success: true,
         user,
       },

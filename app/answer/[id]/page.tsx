@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { AnswerQuestion, GetQuestionById } from "@/actions/qaform";
 import { redirect } from "next/navigation";
@@ -7,17 +7,17 @@ import { toast } from "react-toastify";
 
 export default function answerquestion({
   params,
-}:{
-  params:Promise<{id:string}>
+}: {
+  params: Promise<{ id: string }>;
 }) {
-  const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   useEffect(() => {
     const loadQuestion = async () => {
-      const {id} = await params;
-      const data:any = await GetQuestionById({ id: Number(id) });
+      const { id } = await params;
+      const data: any = await GetQuestionById({ id: Number(id) });
       setQuestion(data.question);
     };
     loadQuestion();
@@ -26,7 +26,7 @@ export default function answerquestion({
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
+    setError("");
 
     if (answer.trim() === "") {
       setError("Answer cannot be empty");
@@ -35,9 +35,9 @@ export default function answerquestion({
       return;
     }
 
-    const { error, success } = await AnswerQuestion({ 
-      answer: answer, 
-      id: Number((await params).id) 
+    const { error, success } = await AnswerQuestion({
+      answer: answer,
+      id: Number((await params).id),
     });
 
     if (error) {
@@ -47,13 +47,12 @@ export default function answerquestion({
 
     if (success) {
       toast.success("Answer submitted successfully");
-      setAnswer('');
+      setAnswer("");
       redirect(`/`);
     }
 
     setIsLoading(false);
   };
-console.log(question)
   return (
     <div className="flex items-center justify-center m-5">
       <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-md">
@@ -81,7 +80,7 @@ console.log(question)
             disabled={isLoading}
             className="w-full rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            {isLoading ? 'Submitting...' : 'Submit Answer'}
+            {isLoading ? "Submitting..." : "Submit Answer"}
           </button>
         </form>
       </div>

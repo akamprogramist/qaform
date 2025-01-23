@@ -4,8 +4,10 @@ import { DeleteQuestion } from "@/actions/qaform";
 import { Edit, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { useCurrentUser } from "@/context/CurrentUserContext";
 
 export default function QAList({ question }) {
+  const { currentUser, setCurrentUser } = useCurrentUser();
   async function deletequestion(id) {
     const { error, success } = await DeleteQuestion({ id });
     if (error) return setError(error);
@@ -43,31 +45,33 @@ export default function QAList({ question }) {
                       Question:
                     </h3>
                   </div>
-                  <div
-                    className="flex items-center space-x-2 opacity-80 group-hover:opacity-100 
+                  {currentUser && currentUser.role === "ADMIN" && (
+                    <div
+                      className="flex items-center space-x-2 opacity-80 group-hover:opacity-100 
                         transition-opacity duration-200"
-                  >
-                    <Link
-                      href={`/answer/${q.id}`}
-                      className="p-2 rounded-lg hover:bg-gray-600/50 text-emerald-400 
+                    >
+                      <Link
+                        href={`/answer/${q.id}`}
+                        className="p-2 rounded-lg hover:bg-gray-600/50 text-emerald-400 
                        hover:text-emerald-300 transition-all duration-200"
-                    >
-                      <Edit
-                        size={18}
-                        className="transform hover:scale-110 transition-transform duration-200"
-                      />
-                    </Link>
-                    <button
-                      onClick={() => deletequestion(q.id)}
-                      className="p-2 rounded-lg hover:bg-gray-600/50 text-rose-400 
+                      >
+                        <Edit
+                          size={18}
+                          className="transform hover:scale-110 transition-transform duration-200"
+                        />
+                      </Link>
+                      <button
+                        onClick={() => deletequestion(q.id)}
+                        className="p-2 rounded-lg hover:bg-gray-600/50 text-rose-400 
                        hover:text-rose-300 transition-all duration-200"
-                    >
-                      <Trash2
-                        size={18}
-                        className="transform hover:scale-110 transition-transform duration-200"
-                      />
-                    </button>
-                  </div>
+                      >
+                        <Trash2
+                          size={18}
+                          className="transform hover:scale-110 transition-transform duration-200"
+                        />
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 <p className="text-gray-300 mb-4 pl-10">{q.question}</p>

@@ -3,17 +3,15 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useCurrentUser } from "../../context/CurrentUserContext";
+import { toast } from "react-toastify";
 
 const Register = () => {
-  const { currentUser } = useCurrentUser();
+  const { currentUser, setCurrentUser } = useCurrentUser();
   const router = useRouter();
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
-
   useEffect(() => {
     if (currentUser) {
       router.push("/");
@@ -24,14 +22,12 @@ const Register = () => {
     event.preventDefault();
 
     if (!fullname || !email || !password) {
-      setErrorMsg("All fields are required");
+      toast.error("Name, Email, and password are required");
       return;
     }
 
     try {
       setLoading(true);
-      setErrorMsg("");
-      setSuccessMsg("");
 
       const res = await fetch("/api/auth/register", {
         method: "POST",
@@ -44,10 +40,9 @@ const Register = () => {
           password,
         }),
       });
-
-      // First check if the response is ok
       if (!res.ok) {
         const errorData = await res.json();
+        toast.error(errorData.error || "Registration failed");
         throw new Error(errorData.error || "Registration failed");
       }
 
@@ -55,21 +50,17 @@ const Register = () => {
       const data = await res.json();
 
       if (data.success) {
-        setSuccessMsg("Registration successful! Redirecting to login...");
-        // Clear form
+        toast.success(data.message);
         setFullname("");
         setEmail("");
         setPassword("");
-        // Redirect after successful registration
-        setTimeout(() => {
-          router.push("/login");
-        }, 2000);
+        if (data.user) setCurrentUser(data.user);
       } else {
-        setErrorMsg(data.error || "Registration failed");
+        toast.error("Registration failed");
+        throw new Error("Registration failed");
       }
     } catch (error) {
       console.error("Registration error:", error);
-      setErrorMsg(error.message || "An error occurred during registration");
     } finally {
       setLoading(false);
     }
@@ -80,26 +71,6 @@ const Register = () => {
       <div className="self-center mb-6 text-xl font-light text-gray-600 sm:text-2xl dark:text-white">
         Register To Your Account
       </div>
-
-      {errorMsg && (
-        <div
-          className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50"
-          role="alert"
-        >
-          <span className="font-medium">Error: </span>
-          {errorMsg}
-        </div>
-      )}
-
-      {successMsg && (
-        <div
-          className="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50"
-          role="alert"
-        >
-          {successMsg}
-        </div>
-      )}
-
       <div className="mt-8 w-full">
         <form onSubmit={handleRegister} className="space-y-6">
           <div className="flex flex-col">

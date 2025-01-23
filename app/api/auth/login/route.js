@@ -33,10 +33,14 @@ export async function POST(request) {
         { status: 200 }
       );
     }
-    const token = jwt.sign({ id: user.id }, "appSecret");
+    const token = jwt.sign({ id: user.id, role: user.role }, "appSecret");
 
     (await cookies()).set("token", token);
-    return NextResponse.json(user, { status: 200 });
+    return NextResponse.json({
+      user: user,
+      message: "Logged in successfully!",
+      status: 200,
+    });
   } catch {
     return NextResponse.json(
       { error: "An error occurred, please try again later!" },

@@ -3,18 +3,16 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCurrentUser } from "../../context/CurrentUserContext";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 const Login = () => {
-  const { currentUser } = useCurrentUser();
+  const { currentUser, setCurrentUser } = useCurrentUser();
 
   const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
-
   useEffect(() => {
     if (currentUser) {
       router.push("/");
@@ -39,50 +37,26 @@ const Login = () => {
       }
       const data = await res.json();
       if (data.error) {
-        setErrorMsg(data.error);
-        setTimeout(() => {
-          setErrorMsg("");
-        }, 4000);
+        toast.error(data.error);
         setLoading(false);
         return data;
       } else {
-        setSuccessMsg("You signed in successfully!");
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 4000);
+        toast.success(data.message);
+        setCurrentUser(data.user);
+        router.push("/");
+        setLoading(false);
+        return data;
       }
-      setLoading(false);
-      return data;
     } catch (error) {
       setLoading(false);
       console.error("Failed to login:", error);
     }
   };
   return (
-    <div className="flex flex-col w-full max-w-md px-4 py-8 bg-white rounded-lg shadow dark:bg-gray-800 sm:px-6 md:px-8 lg:px-10">
+    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center w-full mx-auto max-w-md px-4 py-8 bg-white rounded-lg shadow dark:bg-gray-800 sm:px-6 md:px-8 lg:px-10">
       <div className="self-center mb-6 text-xl font-light text-gray-600 sm:text-2xl dark:text-white">
         Login To Your Account
       </div>
-      {errorMsg ? (
-        <div
-          className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50"
-          role="alert"
-        >
-          <span className="font-medium">Error:</span>
-          {errorMsg}
-        </div>
-      ) : undefined}
-
-      {successMsg ? (
-        <div
-          className="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50"
-          role="alert"
-        >
-          {successMsg}
-        </div>
-      ) : undefined}
-
       <div className="mt-8">
         <form>
           <div className="flex flex-col mb-2">
