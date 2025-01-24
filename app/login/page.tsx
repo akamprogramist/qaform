@@ -6,13 +6,12 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 
 const Login = () => {
-  const { currentUser, setCurrentUser } = useCurrentUser();
+  const { currentUser, setCurrentUser, loading, setLoading } = useCurrentUser();
 
   const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (currentUser) {
       router.push("/");
@@ -33,23 +32,23 @@ const Login = () => {
         }),
       });
       if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      const data = await res.json();
-      if (data.error) {
-        toast.error(data.error);
-        setLoading(false);
-        return data;
+        const errorData = await res.json();
+        toast.error(errorData.error || "Login failed");
       } else {
-        toast.success(data.message);
-        setCurrentUser(data.user);
-        router.push("/");
-        setLoading(false);
-        return data;
+        const data = await res.json();
+        const userData = data.user;
+        if (data.success && userData) {
+          localStorage.setItem("userData", JSON.stringify(userData));
+          toast.success(data.message);
+          setCurrentUser(userData);
+        } else {
+          toast.error(data.error);
+        }
       }
     } catch (error) {
-      setLoading(false);
       console.error("Failed to login:", error);
+    } finally {
+      setLoading(false);
     }
   };
   return (

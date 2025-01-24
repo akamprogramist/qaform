@@ -1,45 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useCurrentUser } from "../context/CurrentUserContext";
-import { useState, useCallback } from "react";
-import { toast } from "react-toastify";
-
 const Header = () => {
-  const router = useRouter();
-  const { currentUser, setCurrentUser } = useCurrentUser();
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-
-  const handleLogout = async () => {
-    try {
-      setIsLoggingOut(true);
-
-      const response = await fetch("/api/auth/logout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // Important: include credentials
-      });
-
-      if (!response.ok) {
-        throw new Error("Logout failed");
-      }
-      const { success, message } = await response.json();
-      if (success) {
-        setCurrentUser(null);
-        router.push("/");
-        toast.success(message);
-      }
-    } catch (error) {
-      console.error("Logout error:", error);
-      toast.error("Logout failed");
-    } finally {
-      setIsLoggingOut(false);
-    }
-  };
-
+  const { currentUser, logout, loading } = useCurrentUser();
   return (
     <>
       {currentUser && (
@@ -85,16 +49,16 @@ const Header = () => {
                       {currentUser.name}
                     </span>
                     <button
-                      onClick={handleLogout}
-                      disabled={isLoggingOut}
+                      onClick={logout}
+                      disabled={loading}
                       className={`px-4 py-2 rounded-lg text-white transition-colors
                     ${
-                      isLoggingOut
+                      loading
                         ? "bg-gray-500 cursor-not-allowed"
                         : "bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700"
                     }`}
                     >
-                      {isLoggingOut ? "Logging out..." : "Logout"}
+                      {loading ? "Logging out..." : "Logout"}
                     </button>
                   </div>
                 ) : (

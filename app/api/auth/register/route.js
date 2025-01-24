@@ -45,22 +45,22 @@ export async function POST(request) {
         password: hash,
         role: role,
       },
-      // Only select safe fields to return
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        createdAt: true,
-      },
     });
     const token = jwt.sign({ id: user.id, role: user.role }, "appSecret");
 
-    (await cookies()).set("token", token);
+    // Set the cookie with HttpOnly and Secure flags
+    const cookie = await cookies();
+    cookie.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 3600,
+      path: "/",
+    });
     return NextResponse.json(
       {
-        message: "Registration successful",
+        user: { email: user.email, name: user.name, role: user.role },
         success: true,
+        message: "Registration successful",
         user,
       },
       { status: 201 }

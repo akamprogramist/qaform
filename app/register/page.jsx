@@ -6,12 +6,11 @@ import { useCurrentUser } from "../../context/CurrentUserContext";
 import { toast } from "react-toastify";
 
 const Register = () => {
-  const { currentUser, setCurrentUser } = useCurrentUser();
+  const { currentUser, setCurrentUser, loading, setLoading } = useCurrentUser();
   const router = useRouter();
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (currentUser) {
       router.push("/");
@@ -21,14 +20,8 @@ const Register = () => {
   const handleRegister = async (event) => {
     event.preventDefault();
 
-    if (!fullname || !email || !password) {
-      toast.error("Name, Email, and password are required");
-      return;
-    }
-
     try {
       setLoading(true);
-
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
@@ -43,21 +36,16 @@ const Register = () => {
       if (!res.ok) {
         const errorData = await res.json();
         toast.error(errorData.error || "Registration failed");
-        throw new Error(errorData.error || "Registration failed");
-      }
-
-      // Try to parse the response
-      const data = await res.json();
-
-      if (data.success) {
-        toast.success(data.message);
-        setFullname("");
-        setEmail("");
-        setPassword("");
-        if (data.user) setCurrentUser(data.user);
       } else {
-        toast.error("Registration failed");
-        throw new Error("Registration failed");
+        const data = await res.json();
+        const userData = data.user;
+        if (data.success && userData) {
+          localStorage.setItem("userData", JSON.stringify(userData));
+          toast.success(data.message);
+          setCurrentUser(userData);
+        } else {
+          toast.error("Registration failed");
+        }
       }
     } catch (error) {
       console.error("Registration error:", error);
