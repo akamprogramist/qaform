@@ -8,6 +8,7 @@ export default async function Home() {
     <div>
       <div className="mx-auto">
         <FormCard />
+        
         <QAList question={question} />
       </div>
     </div>

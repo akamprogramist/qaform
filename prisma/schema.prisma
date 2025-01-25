@@ -7,10 +7,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Category {
+  personal
+  business
+  coding
+}
+
 model Question {
   id        Int      @id @default(autoincrement())
   question  String
   answer    String?
+  category  Category @default(personal)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
