@@ -9,7 +9,6 @@ import { useState, useEffect } from "react";
 
 export default function QAList({ question }) {
   const { currentUser } = useCurrentUser();
-
   const [filteredQuestions, setFilteredQuestions] = useState(question);
   const [activeCategory, setActiveCategory] = useState("all");
 

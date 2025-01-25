@@ -27,7 +27,7 @@ export async function GET() {
           { status: 200 }
         );
       }
-      return NextResponse.json(user, { status: 200 });
+      return NextResponse.json({ user, token }, { status: 200 });
     } else {
       return NextResponse.json(null, { status: 200 });
     }

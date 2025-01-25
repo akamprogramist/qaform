@@ -39,6 +39,7 @@ const Login = () => {
         const userData = data.user;
         if (data.success && userData) {
           localStorage.setItem("userData", JSON.stringify(userData));
+          localStorage.setItem("token", JSON.stringify(data.token));
           toast.success(data.message);
           setCurrentUser(userData);
         } else {

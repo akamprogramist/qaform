@@ -9,8 +9,16 @@ export const CurrentUserProvider = ({ children }) => {
   const [loading, setLoading] = useState();
   useEffect(() => {
     const storedUserData = localStorage.getItem("userData");
+    const storedUserToken = localStorage.getItem("token");
     if (storedUserData) {
-      setCurrentUser(JSON.parse(storedUserData));
+      const tokenInCookies = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("token="));
+      if (!tokenInCookies) {
+        // Set the token into cookies
+        document.cookie = `token=${storedUserToken}; path=/; secure; samesite=strict`;
+      }
+      setCurrentUser({ ...JSON.parse(storedUserData), token: storedUserToken });
       setLoading(false);
     } else {
       const fetchCurrentUser = async () => {
@@ -19,9 +27,9 @@ export const CurrentUserProvider = ({ children }) => {
           if (!res.ok) {
             throw new Error(`HTTP error! status: ${res.status}`);
           }
-          const user = await res.json();
+          const { user, token } = await res.json();
 
-          setCurrentUser(user);
+          setCurrentUser({ user, token });
         } catch (error) {
           console.error("Failed to fetch current user:", error);
           setCurrentUser(null);

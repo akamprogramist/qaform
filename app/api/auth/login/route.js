@@ -50,6 +50,7 @@ export async function POST(request) {
     });
 
     return NextResponse.json({
+      token,
       user: { email: user.email, name: user.name, role: user.role },
       success: true,
       message: "Logged in successfully!",
