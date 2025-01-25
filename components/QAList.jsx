@@ -39,8 +39,8 @@ export default function QAList({ question }) {
 
   return (
     <>
-      <div className=" px-4 py-2">
-        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-6">
+      <div className="max-w-2xl mx-auto flex justify-center items-center px-4 py-2">
+        <div className="w-full grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-4">
           {buttons.map((button) => (
             <button
               key={button.label}
@@ -48,23 +48,18 @@ export default function QAList({ question }) {
               className={`
               relative 
               px-4 py-2 
-              sm:px-5 sm:py-2.5 
-              md:px-6 md:py-3 
-              lg:px-8 lg:py-4      
               rounded-lg 
               text-white 
               font-semibold
-              sm:text-sm 
-
               flex items-center justify-center 
               capitalize 
+              text-lg
+              sm:text-md
               space-x-2 
-              
               hover:bg-gray-900
               transition-all 
               duration-300 
               ease-in-out
-              
               ${
                 activeCategory === button.label
                   ? `bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg`
@@ -72,7 +67,7 @@ export default function QAList({ question }) {
               }
             `}
             >
-              <button.icon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+              <button.icon className="mr-2 w-5 h-5" />
               <span>{button.label}</span>
             </button>
           ))}
