@@ -39,25 +39,46 @@ export default function QAList({ question }) {
 
   return (
     <>
-      <div className="flex justify-center gap-4 ">
-        {buttons.map((button) => (
-          <button
-            key={button.label}
-            onClick={() => setActiveCategory(button.label)}
-            className={`relative px-6 py-3 rounded-lg text-white font-semibold
-            flex items-center justify-center capitalize space-x-2 hover:bg-gray-900
-            transition-all duration-300 ease-in-out
-            ${
-              activeCategory === button.label
-                ? `bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg`
-                : "bg-gray-800 border border-gray-700"
-            }`}
-          >
-            <button.icon size={20} />
-            <span>{button.label}</span>
-          </button>
-        ))}
+      <div className=" px-4 py-2">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-6">
+          {buttons.map((button) => (
+            <button
+              key={button.label}
+              onClick={() => setActiveCategory(button.label)}
+              className={`
+              relative 
+              px-4 py-2 
+              sm:px-5 sm:py-2.5 
+              md:px-6 md:py-3 
+              lg:px-8 lg:py-4      
+              rounded-lg 
+              text-white 
+              font-semibold
+              sm:text-sm 
+
+              flex items-center justify-center 
+              capitalize 
+              space-x-2 
+              
+              hover:bg-gray-900
+              transition-all 
+              duration-300 
+              ease-in-out
+              
+              ${
+                activeCategory === button.label
+                  ? `bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg`
+                  : "bg-gray-800 border border-gray-700"
+              }
+            `}
+            >
+              <button.icon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+              <span>{button.label}</span>
+            </button>
+          ))}
+        </div>
       </div>
+
       <div className="flex items-center justify-center bg-gray-900 p-4">
         <Card className="w-full max-w-2xl bg-gray-800 border-gray-700">
           <CardHeader>
