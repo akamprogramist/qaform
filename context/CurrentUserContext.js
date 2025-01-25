@@ -30,8 +30,7 @@ export const CurrentUserProvider = ({ children }) => {
           const { user, token } = await res.json();
 
           setCurrentUser({ user, token });
-        } catch (error) {
-          console.error("Failed to fetch current user:", error);
+        } catch {
           setCurrentUser(null);
         } finally {
           setLoading(false);
