@@ -76,52 +76,54 @@ export default function Page({ params }) {
         <h2 className="mb-4 text-center text-2xl font-bold">Answer Question</h2>
 
         {question && (
-          <div className="mb-4">
-            <p className="font-medium">Question:</p>
-            <p className="mb-4">{question}</p>
-          </div>
+          <>
+            <div className="mb-4">
+              <p className="font-medium">Question:</p>
+              <p className="mb-4">{question}</p>
+            </div>
+
+            <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <Select
+                  value={category || ""}
+                  onValueChange={(value) => setCategory(value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Categories</SelectLabel>
+                      <SelectItem value="personal">Personal</SelectItem>
+                      <SelectItem value="business">Business</SelectItem>
+                      <SelectItem value="coding">Coding</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="mb-4">
+                <textarea
+                  id="answer"
+                  name="answer"
+                  placeholder="Your answer"
+                  className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={answer || ""}
+                  onChange={(e) => setAnswer(e.target.value)}
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {isLoading ? "Submitting..." : "Submit Answer"}
+              </button>
+            </form>
+          </>
         )}
-
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <Select
-              value={category || ""}
-              onValueChange={(value) => setCategory(value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select a category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Categories</SelectLabel>
-                  <SelectItem value="personal">Personal</SelectItem>
-                  <SelectItem value="business">Business</SelectItem>
-                  <SelectItem value="coding">Coding</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="mb-4">
-            <textarea
-              id="answer"
-              name="answer"
-              placeholder="Your answer"
-              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={answer || ""}
-              onChange={(e) => setAnswer(e.target.value)}
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            {isLoading ? "Submitting..." : "Submit Answer"}
-          </button>
-        </form>
       </div>
     </div>
   );
