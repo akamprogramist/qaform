@@ -11,7 +11,7 @@ export async function AddQuestion({ question }) {
     await fetch("https://akamqaform.netlify.app/api/notify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: question.question }),
+      body: JSON.stringify({ question: question }),
     });
     revalidatePath("/");
     return { success: true };

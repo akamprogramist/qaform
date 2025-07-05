@@ -3,7 +3,6 @@ import nodemailer from "nodemailer";
 export async function POST(req) {
   try {
     const { question } = await req.json();
-    console.log(question);
     const transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
@@ -16,7 +15,7 @@ export async function POST(req) {
       from: `"Q&A Bot" <${process.env.EMAIL_USER}>`,
       to: "akamprogramist@gmail.com",
       subject: "New Question Received",
-      text: `📩 A new question was submitted:${question}`,
+      text: `📩 A new question was submitted:\n\n${question}`,
     });
 
     return new Response(JSON.stringify({ success: true }), {
