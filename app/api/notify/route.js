@@ -1,11 +1,9 @@
-// app/api/notify/route.js
-
 import nodemailer from "nodemailer";
 
 export async function POST(req) {
   try {
-    const { question } = req.body;
-
+    const { question } = await req.json();
+    console.log(question);
     const transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
@@ -16,9 +14,9 @@ export async function POST(req) {
 
     await transporter.sendMail({
       from: `"Q&A Bot" <${process.env.EMAIL_USER}>`,
-      to: "akadev404@gmail.com",
+      to: "akamprogramist@gmail.com",
       subject: "New Question Received",
-      text: `📩 A new question was submitted:\n\n${question}\n\nFrom: ${"Anonymous"}`,
+      text: `📩 A new question was submitted:${question}`,
     });
 
     return new Response(JSON.stringify({ success: true }), {

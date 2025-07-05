@@ -8,6 +8,11 @@ export async function AddQuestion({ question }) {
     await prisma.question.create({
       data: { question },
     });
+    await fetch("https://akamqaform.netlify.app/api/notify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question: question.question }),
+    });
     revalidatePath("/");
     return { success: true };
   } catch (err) {
