@@ -7,7 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 
 export default function FormCard() {
-  const [Question, setQuestion] = useState('');
+  const [Question, setQuestion] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -33,7 +33,7 @@ export default function FormCard() {
       toast.success("Question submitted successfully");
     }
 
-    setQuestion('');
+    setQuestion("");
     setIsLoading(false);
   };
 
@@ -72,7 +72,7 @@ export default function FormCard() {
                         transition-all duration-200 flex items-center justify-center space-x-2"
             >
               {isLoading && <Loader2 size={20} className="animate-spin" />}
-              <span>{isLoading ? 'Submitting...' : 'Submit Question'}</span>
+              <span>{isLoading ? "Submitting..." : "Submit Question"}</span>
             </button>
           </form>
         </CardContent>

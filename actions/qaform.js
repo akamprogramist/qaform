@@ -5,15 +5,14 @@ import prisma from "../lib/db";
 
 export async function AddQuestion({ question }) {
   try {
-    const result = await prisma.question.create({
-      data: {
-        question,
-      },
+    await prisma.question.create({
+      data: { question },
     });
     revalidatePath("/");
     return { success: true };
-  } catch {
-    return { error: "An unexpected error occurred" };
+  } catch (err) {
+    console.error("AddQuestion error:", err);
+    return { error: err.message || "An unexpected error occurred" };
   }
 }
 
